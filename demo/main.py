@@ -32,9 +32,13 @@ class Handler:
         if subname in self.rules.keys():
             globals()[self.rules[subname]['action']](f_path, self.rules[subname]['param'])
     def process(self,path): # 递归遍历处理文件夹下所有文件
-        for root,dirs,files in os.walk(path):
-            for file in files:
-                self.fun_selector(os.path.join(root,file))
+        path = os.path.join(path)
+        if os.path.isfile(path):
+            self.fun_selector(path)
+        else:
+            for i in os.listdir(path):
+                self.process(i)
+        
 
 if __name__ == '__main__':
     conf = Rule()   # 初始化规则管理器
@@ -54,10 +58,7 @@ if __name__ == '__main__':
             file_list.append(path)
         # 用配置文件初始化文件处理器，并调用process进行处理
         for i in file_list:
-            if os.path.isdir(i):
-                Handler(conf.config['default' if c=='' else c]).process(i)
-            if os.path.isfile(i):
-                Handler(conf.config['default' if c=='' else c]).fun_selector(i)
+            Handler(conf.config['default' if c=='' else c]).process(i)
     elif s == 'a':
         # 一条规则包括文件后缀名，以及对应的处理函数和参数
         rule={}
