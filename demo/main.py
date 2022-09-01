@@ -3,6 +3,7 @@
 # TODO: 添加命令行参数
 # TODO: 添加GUI
 ################################
+from pydoc import isdata
 from fun import *  # 导入文件处理函数
 import json
 import os
@@ -35,7 +36,7 @@ class Handler:
         path = os.path.join(path)
         if os.path.isfile(path):
             self.fun_selector(path)
-        else:
+        elif os.path.isdir(path):
             for i in os.listdir(path):
                 self.process(i)
         
