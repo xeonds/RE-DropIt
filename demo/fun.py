@@ -1,8 +1,10 @@
 import os
 import shutil
 
-def move(filename,path):
-    shutil.move(filename,path)
+def move(path,target):
+    if not os.path.isdir(target):
+        os.makedirs(target)
+    shutil.move(path,target)
     return True
 
 def copy(filename,path):
