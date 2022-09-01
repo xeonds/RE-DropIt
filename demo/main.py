@@ -27,14 +27,14 @@ class Rule:
 class Handler:
     def __init__(self,rules): # 加载配置
         self.rules = rules
-    def fun_selector(self,filename):  # 根据后缀选择文件处理函数
-        subname = filename.split('.')[-1]
+    def fun_selector(self,f_path):  # 根据后缀选择文件处理函数
+        subname = f_path.split('.')[-1]
         if subname in self.rules.keys():
-            globals()[self.rules[subname]['action']](filename, self.rules[subname]['param'])
+            globals()[self.rules[subname]['action']](f_path, self.rules[subname]['param'])
     def process(self,path): # 递归遍历处理文件夹下所有文件
         for root,dirs,files in os.walk(path):
             for file in files:
-                self.fun_selector(root+'\\'+file)
+                self.fun_selector(os.path.join(root,file))
 
 if __name__ == '__main__':
     conf = Rule()   # 初始化规则管理器
