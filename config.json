@@ -1,0 +1,56 @@
+{
+    "default": {
+        "jpg": {
+            "action": "move",
+            "param": "./image/"
+        },
+        "png": {
+            "action": "move",
+            "param": "./image/"
+        },
+        "gif": {
+            "action": "move",
+            "param": "./image/"
+        },
+        "txt": {
+            "action": "move",
+            "param": "./document/"
+        }
+    },
+    "rulesA": {
+        "jpg": {
+            "action": "move",
+            "param": "./image/"
+        },
+        "png": {
+            "action": "move",
+            "param": "./image/"
+        },
+        "gif": {
+            "action": "move",
+            "param": "./image/"
+        },
+        "txt": {
+            "action": "move",
+            "param": "./document/"
+        }
+    },
+    "rulesB": {
+        "jpg": {
+            "action": "move",
+            "param": "./image/"
+        },
+        "png": {
+            "action": "move",
+            "param": "./image/"
+        },
+        "gif": {
+            "action": "move",
+            "param": "./image/"
+        },
+        "txt": {
+            "action": "move",
+            "param": "./document/"
+        }
+    }
+}

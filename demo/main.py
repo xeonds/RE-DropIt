@@ -3,7 +3,7 @@
 # TODO: 添加命令行参数
 # TODO: 添加GUI
 ################################
-from demo import *  # 导入文件处理函数
+from fun import *  # 导入文件处理函数
 import json
 import os
 
@@ -11,7 +11,7 @@ import os
 class Rule:
     def __init__(self) -> None:     # 配置加载
         self.config_path='./config.json'
-        if not os.file_exists(self.config_path):
+        if not os.path.isfile(self.config_path):
             with open(self.config_path, 'w') as f:
                 f.write('{"default":{"jpg": {"action": "move","param":"./"}}}')
         self.config=json.load(open(self.config_path,mode='r'))
