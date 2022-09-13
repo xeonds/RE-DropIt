@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32526.322
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RE-DropIt", "RE-DropIt\RE-DropIt.csproj", "{B6D6FB84-7D80-46C0-BB6D-0F4F1198C7FD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B6D6FB84-7D80-46C0-BB6D-0F4F1198C7FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6D6FB84-7D80-46C0-BB6D-0F4F1198C7FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6D6FB84-7D80-46C0-BB6D-0F4F1198C7FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6D6FB84-7D80-46C0-BB6D-0F4F1198C7FD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1876E257-81CC-443D-982A-F5E9F482BC45}
+	EndGlobalSection
+EndGlobal
