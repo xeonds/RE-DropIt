@@ -4,39 +4,61 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace RE_DropIt
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
+            Directory_Load();
         }
 
-        private void Button_folder_select_Click(object sender, RoutedEventArgs e)
+        private void Directory_Load()
         {
-            var dialog = new System.Windows.Forms.FolderBrowserDialog
+            var directory = new ObservableCollection<DirectoryRecord>();
+
+            foreach (var drive in DriveInfo.GetDrives())
             {
-                Description = "Time to select a folder",
-                UseDescriptionForTitle = true,
-                SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)
-        + Path.DirectorySeparatorChar,
-                ShowNewFolderButton = true
+                directory.Add(
+                    new DirectoryRecord
+                    {
+                        Info = new DirectoryInfo(drive.RootDirectory.FullName)
+                    }
+                );
+            }
+
+            dirTreeView.ItemsSource = directory;
+        }
+
+        private void FileInfoColumn_Load(object sender, DataGridAutoGeneratingColumnEventArgs e)
+        {
+            List<string> requiredProperties = new List<string>
+            {
+                "Name", "Length", "FullName", "IsReadOnly", "LastWriteTime"
             };
 
-            if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+            if (!requiredProperties.Contains(e.PropertyName))
             {
-                MessageBox.Show("打开文件夹失败", "错误");
+                e.Cancel = true;
             }
-            listBox.ItemsSource = Directory.GetFiles(dialog.SelectedPath);
+            else
+            {
+                e.Column.Header = e.Column.Header.ToString();
+            }
+        }
+
+        private void button_folder_dropit_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine(fileInfo.SelectedValue);
+            var proc = new Core(fileInfo.SelectedValuePath);
+            proc.Run();
         }
     }
 
-    class DirectoryRecord
+    public class DirectoryRecord
     {
         public DirectoryInfo Info { get; set; }
 
@@ -44,7 +66,13 @@ namespace RE_DropIt
         {
             get
             {
-                return Info.GetFiles();
+                try { 
+                    return Info.GetFiles();
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
             }
         }
 
@@ -52,8 +80,16 @@ namespace RE_DropIt
         {
             get
             {
-                return from di in Info.GetDirectories("*", SearchOption.TopDirectoryOnly)
-                       select new DirectoryRecord { Info = di };
+                try
+                {
+                    return from di in Info.GetDirectories("*", SearchOption.TopDirectoryOnly)
+                           select new DirectoryRecord { Info = di };
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+                
             }
         }
     }
