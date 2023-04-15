@@ -4,6 +4,7 @@ import os
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
+import hashlib
 
 class App:
     def __init__(self, master):
@@ -26,6 +27,8 @@ class App:
         self.process_button.pack(side=tk.LEFT, padx=5, pady=5)
         self.extract_button = tk.Button(self.master, text="Extract", command=lambda: self.process_folders(mode = "extract"))
         self.extract_button.pack(side=tk.LEFT, padx=5, pady=5)
+        self.rmdupli_button = tk.Button(self.master, text="Remove Dumplicate", command=lambda: self.process_folders(mode = "rmdupli"))
+        self.rmdupli_button.pack(side=tk.LEFT, padx=5, pady=5)
 
         # Align buttons and label horizontally
         self.file_list_label.pack(side=tk.TOP, anchor=tk.W)
@@ -95,8 +98,51 @@ class process_directory:
                     old_path = os.path.join(self.directory, file['path'])
                     new_path = os.path.join(self.parent_dir, file['name'])
                     shutil.move(old_path, new_path)
+        elif self.mode == "rmdupli": # get all hash value from file_dict, and remove files with same hash value, only left one file for a hash
+            hash_dict = {}
+            for _, filenames in self.file_dict.items():
+                for file in filenames:
+                    if file['hash'] not in hash_dict:
+                        hash_dict[file['hash']] = file['path']
+                    else:
+                        print("Duplicate file found: " + file['path'])
+                        # os.remove(os.path.join(self.directory, file['path']))
+        # unauthorized modes, please use with caution
+        elif self.mode == "rmempty": # remove empty files
+            for _, filenames in self.file_dict.items():
+                for file in filenames:
+                    if file['size'] == 0:
+                        os.remove(os.path.join(self.directory, file['path']))
+        elif self.mode == "rmold": # remove files older than a certain time
+            for _, filenames in self.file_dict.items():
+                for file in filenames:
+                    if file['mtime'] < self.time:
+                        os.remove(os.path.join(self.directory, file['path']))
+        elif self.mode == "rmnew": # remove files newer than a certain time
+            for _, filenames in self.file_dict.items():
+                for file in filenames:
+                    if file['mtime'] > self.time:
+                        os.remove(os.path.join(self.directory, file['path']))
+        elif self.mode == "rmext": # remove files with certain extension
+            for ext, _ in self.file_dict.items():
+                for file in self.file_dict[ext]:
+                    os.remove(os.path.join(self.directory, file['path']))
+        elif self.mode == "rmname": # remove files with certain name
+            for _, filenames in self.file_dict.items():
+                for file in filenames:
+                    if file['name'] in self.name:
+                        os.remove(os.path.join(self.directory, file['path']))
+        elif self.mode == "rmtype": # remove files with certain type
+            for _, filenames in self.file_dict.items():
+                for file in filenames:
+                    if file['type'] in self.type:
+                        os.remove(os.path.join(self.directory, file['path']))
+        elif self.mode == "rmall": # remove all files
+            for _, filenames in self.file_dict.items():
+                for file in filenames:
+                    os.remove(os.path.join(self.directory, file['path']))
         else:
-            print("Invalid mode selected")
+            print("Invalid mode")
 
     def scan_dir(self):
         for root, dirs, files in os.walk(self.directory):
@@ -105,7 +151,11 @@ class process_directory:
                 if extension:
                     if extension not in self.file_dict:
                         self.file_dict[extension] = []
-                    self.file_dict[extension].append({'name': file, 'path': os.path.join(root, file)})
+                    self.file_dict[extension].append({'name': file, 'path': os.path.join(root, file), 'hash': self.get_hash(os.path.join(root, file))})
+
+    def get_hash(self, file):
+        with open(file, 'rb') as f:
+            return hashlib.sha1(f.read()).hexdigest()
 
 
 root = tk.Tk()
